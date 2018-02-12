@@ -1,4 +1,4 @@
-console.log('this is loaded');
+console.log('\n');
 
 var twitterKeys = {
   consumer_key: 'fBKJuS6fDjg7LiDGnNP9ynSFW',
