@@ -4,7 +4,7 @@ var Spotify = require("node-spotify-api");
 var request = require("request");
 var keys = require("./keys.js");
 var command = process.argv[2];
-var songName = "";
+var songName = "the sign ace of base";
 
 var client = new twitter({
     consumer_key: keys[0].consumer_key,
@@ -48,10 +48,13 @@ function myTweets() {
 }
 
 function spotifyThis() {
-    for (var i = 3; i < process.argv.length; i++){
-        songName += process.argv[i] + " ";
+    if (process.argv.length > 3) {
+        songName = "";
+        for (var i = 3; i < process.argv.length; i++){
+            songName += process.argv[i] + " ";
+        }
     }
-    spotify.search({ type: 'track', query: songName, limit: 15 }, function(err, data) {
+    spotify.search({ type: 'track', query: songName, limit: 10 }, function(err, data) {
         if (err) {
           return console.log('Error occurred: ' + err);
         }
