@@ -1,6 +1,7 @@
 var fs = require("fs");
 var twitter = require("twitter");
 var keys = require("./keys.js");
+var command = process.argv[2];
 
 var client = new twitter({
     consumer_key: keys.consumer_key,
@@ -9,14 +10,24 @@ var client = new twitter({
     access_token_secret: keys.access_token_secret
   });
 
-if (process.argv[2] === "my-tweets"){
-    client.get("https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=Mr_liri_Guy&count=20", function(error, tweets, response){
-        if(error){
-            return (error);
-        }
-        for(var i = 0; i < tweets.length; i++){
-        console.log(tweets[i].text);
-        console.log(tweets[i].created_at, "\n");
-        }
-    });
+var params = {screen_name: "Mr_liri_Guy", count: "20"};
+
+switch(command){
+    case "my-tweets":
+        client.get("statuses/user_timeline", params, function(error, tweets, response){
+            if(error){
+                return (error);
+            }
+            for(var i = 0; i < tweets.length; i++){
+            console.log(tweets[i].text);
+            console.log(tweets[i].created_at, "\n");
+            }
+        });
+        break;
+    case "spotify-this-song":
+        break;
+    case "movie-this":
+        break;
+    case "do-what-it-says":
+        break;
 }
