@@ -24,19 +24,21 @@ var spotify = new Spotify({
 var params = {screen_name: "Mr_liri_Guy", count: "20"};
 
 // The program logic
-switch(command){
-    case "my-tweets":
-        myTweets();
-        break;
-    case "spotify-this-song":
-        spotifyThis();
-        break;
-    case "movie-this":
-        movieThis();
-        break;
-    // case "do-what-it-says":
-    //     doThis();
-    //     break;
+function logic(){
+    switch(command){
+        case "my-tweets":
+            myTweets();
+            break;
+        case "spotify-this-song":
+            spotifyThis();
+            break;
+        case "movie-this":
+            movieThis();
+            break;
+        case "do-what-it-says":
+            doThis();
+            break;
+    }        
 }
 
 function myTweets() {
@@ -83,11 +85,34 @@ function movieThis(){
     request("http://www.omdbapi.com/?t=" + movieName + "&y=&plot=short&apikey=40e9cece", function(error, response, body) {
 
         if (!error && response.statusCode === 200) {
-            console.log("\nMovie Title: " + JSON.parse(body).Title + "\nYear: " + JSON.parse(body).Year + "\nIMDB Rating: " + JSON.parse(body).Ratings[0].Value + "\nRotten Tomatoes Rating: " + JSON.parse(body).Ratings[1].Value + "\nMade in: " + JSON.parse(body).Country + "\nLanguage: " + JSON.parse(body).Language + "\nPlot: " + JSON.parse(body).Plot + "\nActors: " + JSON.parse(body).Actors);
-        }
-        else {
-            console.log("Sorry, try again later...");
+            if(JSON.parse(body).Response === "False"){
+                console.log(JSON.parse(body).Error);
+            }
+            else {
+                console.log("Movie Title: " + JSON.parse(body).Title + "\nYear: " + JSON.parse(body).Year + "\nIMDB Rating: " + JSON.parse(body).Ratings[0].Value + "\nRotten Tomatoes Rating: " + JSON.parse(body).Ratings[1].Value + "\nMade in: " + JSON.parse(body).Country + "\nLanguage: " + JSON.parse(body).Language + "\nPlot: " + JSON.parse(body).Plot + "\nActors: " + JSON.parse(body).Actors);
+            }
         }
     });
 
 }
+
+function doThis(){
+    fs.readFile("./random.txt", "utf8", function(err, data){
+        var random = data.split(",");
+        command = random[0];
+        if (command === "spotify-this-song"){
+            songName = random[1];
+            logic();
+        }
+        else if(command === "movie-this"){
+            movieName = random[1];
+            logic();
+        }
+        else {
+            logic();
+        }
+    });
+}
+
+// Initially runs the program
+logic();
