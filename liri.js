@@ -82,7 +82,7 @@ function movieThis(){
         }
     }
 
-    request("http://www.omdbapi.com/?t=" + movieName + "&y=&plot=short&apikey=40e9cece", function(error, response, body) {
+    request("http://www.omdbapi.com/?t=" + movieName + "&apikey=40e9cece", function(error, response, body) {
 
         if (!error && response.statusCode === 200) {
             if(JSON.parse(body).Response === "False"){
