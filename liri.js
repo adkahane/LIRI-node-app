@@ -1,3 +1,4 @@
+// Variables
 var fs = require("fs");
 var twitter = require("twitter");
 var Spotify = require("node-spotify-api");
@@ -5,21 +6,24 @@ var request = require("request");
 var keys = require("./keys.js");
 var command = process.argv[2];
 var songName = "the sign ace of base";
+var movieName = "Mr Nobody";
 
+// Gets twitter keys and tokens
 var client = new twitter({
     consumer_key: keys[0].consumer_key,
     consumer_secret: keys[0].consumer_secret,
     access_token_key: keys[0].access_token_key,
     access_token_secret: keys[0].access_token_secret
 });
-
+// Gets spotify keys and tokens
 var spotify = new Spotify({
     id: keys[1].client_id,
     secret: keys[1].client_secret
 });
-
+// Twitter API call parameters
 var params = {screen_name: "Mr_liri_Guy", count: "20"};
 
+// The program logic
 switch(command){
     case "my-tweets":
         myTweets();
@@ -27,9 +31,9 @@ switch(command){
     case "spotify-this-song":
         spotifyThis();
         break;
-    // case "movie-this":
-    //     movieThis();
-    //     break;
+    case "movie-this":
+        movieThis();
+        break;
     // case "do-what-it-says":
     //     doThis();
     //     break;
@@ -66,4 +70,24 @@ function spotifyThis() {
             console.log("Preview URL: " + data.tracks.items[i].external_urls.spotify + "\n");
         }
     });
+}
+
+function movieThis(){
+    if (process.argv.length > 3){
+        movieName = "";
+        for (var i = 3; i < process.argv.length; i++){
+            movieName += process.argv[i] + "+";
+        }
+    }
+
+    request("http://www.omdbapi.com/?t=" + movieName + "&y=&plot=short&apikey=40e9cece", function(error, response, body) {
+
+        if (!error && response.statusCode === 200) {
+            console.log("\nMovie Title: " + JSON.parse(body).Title + "\nYear: " + JSON.parse(body).Year + "\nIMDB Rating: " + JSON.parse(body).Ratings[0].Value + "\nRotten Tomatoes Rating: " + JSON.parse(body).Ratings[1].Value + "\nMade in: " + JSON.parse(body).Country + "\nLanguage: " + JSON.parse(body).Language + "\nPlot: " + JSON.parse(body).Plot + "\nActors: " + JSON.parse(body).Actors);
+        }
+        else {
+            console.log("Sorry, try again later...");
+        }
+    });
+
 }
