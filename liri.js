@@ -42,14 +42,29 @@ function logic(){
 }
 
 function myTweets() {
+    fs.appendFile("./log.txt", "----------------\n" + command + "\n----------------\n", function(err){
+        if(err){
+            throw err;
+        }
+    });
     client.get("statuses/user_timeline", params, function(error, tweets, response){
         if(error){
             return (error);
         }
         for(var i = 0; i < tweets.length; i++){
-        console.log(tweets[i].text);
-        console.log(tweets[i].created_at, "\n");
+            console.log(tweets[i].text);
+            console.log(tweets[i].created_at, "\n");
+            fs.appendFile("./log.txt", tweets[i].text + "\n" + tweets[i].created_at + "\n\n", function(err){
+                if(err){
+                    throw err;
+                }
+            });
         }
+        fs.appendFile("./log.txt", "\n--------------------------------------------------------------------", function(err){
+            if(err){
+                throw err;
+            }
+        });
     });
 }
 
@@ -70,7 +85,18 @@ function spotifyThis() {
             console.log((i+1) + ".\n" + "Band: " + data.tracks.items[i].album.artists[0].name);
             console.log("Album: " + data.tracks.items[i].album.name);
             console.log("Preview URL: " + data.tracks.items[i].external_urls.spotify + "\n");
+            
+            fs.appendFile("./log.txt", (i+1) + ".\n" + "Band: " + data.tracks.items[i].album.artists[0].name + "\nAlbum: " + data.tracks.items[i].album.name + "\nPreview URL: " + data.tracks.items[i].external_urls.spotify + "\n", function(err){
+                if(err){
+                    throw err;
+                }
+            });
         }
+        fs.appendFile("./log.txt", "\n--------------------------------------------------------------------", function(err){
+            if(err){
+                throw err;
+            }
+        });
     });
 }
 
